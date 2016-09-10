@@ -59,6 +59,7 @@ def clean_data():
     books_data = get_data()
     altered_books_data = []
     authors_data = []
+    total_combined = []
 
     for val in books_data:
         temp = []
@@ -69,17 +70,19 @@ def clean_data():
                 temp.append(" ".join((i for i in val.split(" ") if i)))
                 temp.append(v)
             books_dict = convert_to_dict(list(reversed(temp)))
+            total_combined.append(books_dict.copy())
             author_name = books_dict.pop("author")
             altered_books_data.append(books_dict)
             authors_data.append(author_name)
         elif len(val) == 8:
             books_dict = convert_to_dict(val)
+            total_combined.append(books_dict.copy())
             author_name = books_dict.pop("author")
             altered_books_data.append(books_dict)
             authors_data.append(author_name)
-    return altered_books_data, authors_data
+    return altered_books_data, authors_data, total_combined
 
 
 if __name__ == "__main__":
-    books, author = clean_data()
-    print(books[-1], author[-1])
+    books, author, total = clean_data()
+    print(books[-1], author[-1], total[-1])
