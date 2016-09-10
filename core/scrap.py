@@ -7,9 +7,18 @@ import requests
 
 
 def convert_to_dict(val):
+
+    """
+    :param val: list of book details
+    :return: dict on book details
+
+    takes in raw list and then converts it into
+    dictionary.
+    """
+
     track = dict()
     for i in range(0, len(val), 2):
-        temp_val = val[i].split(":")[0]
+        temp_val = val[i].split(":")[0].lower()
         track[temp_val] = val[i + 1]
     return track
 
@@ -17,14 +26,16 @@ def convert_to_dict(val):
 def get_data():
 
     """
-    :return:
+    :return: None
+
+    Gets data from tables and then convert it into list.
     """
 
     soup = BeautifulSoup(
         requests.get("http://www.travelman.co.uk/list_of_titles.htm").text,
         'html.parser'
     )
-    
+
     temp = []
     form = soup.find('form', {"name": "formTitles"})
     tables = form.find_all("table")
@@ -40,13 +51,16 @@ def get_data():
 def clean_data():
 
     """
-    :return:
+    :return: tuple of book details and authors
+
+    Takes in raw data cleans it and returns tuple.
     """
 
-    main_temp = get_data()
-    main_main_temp = []
+    books_data = get_data()
+    altered_books_data = []
+    authors_data = []
 
-    for val in main_temp:
+    for val in books_data:
         temp = []
         if len(val) > 8:
             prev = " ".join(val)
@@ -54,12 +68,18 @@ def clean_data():
                 prev, val = prev.split(v)
                 temp.append(" ".join((i for i in val.split(" ") if i)))
                 temp.append(v)
-            main_main_temp.append(convert_to_dict(list(reversed(temp))))
+            books_dict = convert_to_dict(list(reversed(temp)))
+            author_name = books_dict.pop("author")
+            altered_books_data.append(books_dict)
+            authors_data.append(author_name)
         elif len(val) == 8:
-            main_main_temp.append(convert_to_dict(val))
-    return main_main_temp
+            books_dict = convert_to_dict(val)
+            author_name = books_dict.pop("author")
+            altered_books_data.append(books_dict)
+            authors_data.append(author_name)
+    return altered_books_data, authors_data
 
 
 if __name__ == "__main__":
-    data = clean_data()
-    print(data[-1])
+    books, author = clean_data()
+    print(books[-1], author[-1])
