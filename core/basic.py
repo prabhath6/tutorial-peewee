@@ -5,7 +5,7 @@ from peewee import *
 from core.scrap import clean_data
 
 psql_db = PostgresqlDatabase(
-    'ORM',  # database nanme
+    'ORM',  # database name
     user='prabhath',  # user name
     password='',  # password
     host='localhost',  # hostname -> localhost or 127.0.0.1
