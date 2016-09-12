@@ -36,8 +36,8 @@ def populate():
     students = ["student1", "student2", "student3", "student4"]
     courses = ["python", "java", "DataStructures", "WebDevelopment", "OperatingSystems"]
 
-    for course in courses:
-        Course.create_or_get(name=course)
+    for cour in courses:
+        Course.create_or_get(name=cour)
 
     for stud in students:
         s = Student.create(name=stud)
